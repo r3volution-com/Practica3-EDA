@@ -2,9 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.TreeMap;
-import java.util.Vector;
+import java.util.*;
 
 public class DiccTM implements Diccionario {
     private int nlenguas;
@@ -90,26 +88,66 @@ public class DiccTM implements Diccionario {
     }
 
     public boolean borra(String s) {
+        if (s != null && dicc.remove(s) != null) return true;
         return false;
     }
 
     public int busca(String s) {
-        return 0;
+        if (s != null && dicc.get(s) != null) return 1;
+        return -1;
     }
 
     public String traduce(String s, char l) {
+        if (s != null) {
+            int pos = -1;
+            for (int i = 0; i < lenguas.size() && pos == -1; i++) {
+                if (l == lenguas.get(i)) {
+                    pos = i;
+                }
+            }
+            if (pos >= 0) {
+                Vector<String> aux = dicc.get(s);
+                return aux.get(pos);
+            }
+        }
         return null;
     }
 
     public void visualiza() {
-
+        Set keys = dicc.keySet();
+        for (Iterator i = dicc.entrySet().iterator(); i.hasNext();){
+            String key = (String)i.next();
+            Vector<String> values =  dicc.get(key);
+            String cadena = key;
+            for (int j = 0; j < values.size(); j++){
+                cadena += ":"+values.get(j);
+            }
+            System.out.println(cadena);
+        }
     }
 
     public void visualiza(int j) {
-
+        Set<String> keys = dicc.keySet();
+        int k = 0;
+        for (Iterator i = dicc.entrySet().iterator(); i.hasNext() && k<j ;k++){
+            String key = (String)i.next();
+            Vector<String> values =  dicc.get(key);
+            String cadena = key;
+            for (int l = 0; l < values.size(); l++){
+                cadena += ":"+values.get(j);
+            }
+            System.out.println(cadena);
+        }
     }
 
     public void visualiza(int j, char l) {
-
+        Set<String> keys = dicc.keySet();
+        int k = 0;
+        for (Iterator i = dicc.entrySet().iterator(); i.hasNext() && k<j ;k++){
+            String key = (String)i.next();
+            Vector<String> values =  dicc.get(key);
+            String cadena = key+":"+traduce(key, l);
+            System.out.println(cadena);
+        }
     }
 }
