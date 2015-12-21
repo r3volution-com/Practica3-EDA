@@ -59,7 +59,42 @@ public class DiccABB implements Diccionario {
     }
 
     public boolean inserta(Palabra2 p) {
-
+        if (p != null && p.getOrigen() != null && !p.getOrigen().equalsIgnoreCase("") && p.getLenguas().length == lenguas.size()) {
+            char[] len = p.getLenguas();
+            boolean existe = false;
+            NodoABB nodo = dicc;
+            NodoABB n_anterior = null;
+            NodoABB n_auxiliar = new NodoABB(p);
+            int posicion = 0;
+            for (int i = 0; i < len.length && i < lenguas.size(); i++) {
+                if (len[i] != lenguas.get(i)) {
+                    return false;
+                }
+            }
+            if (dicc == null){
+                dicc = n_auxiliar;
+                return true;
+            }
+            while (!existe){
+                posicion = p.getOrigen().compareToIgnoreCase(nodo.getPalabra2().getOrigen());
+                if (posicion == 0) existe = true;
+                else if (posicion > 0) {
+                    n_anterior = nodo;
+                    nodo = nodo.getHijoDe();
+                } else if (posicion < 0){
+                    n_anterior = nodo;
+                    nodo = nodo.getHijoIz();
+                }
+            }
+            if (existe){
+                for (int i = 0; i< lenguas.size(); i++){
+                    if (p.getTraduccion(lenguas.get(i)) != null && !p.getTraduccion(lenguas.get(i)).equals("") && nodo.getPalabra2().setTrad(p.getTraduccion(lenguas.get(i)), lenguas.get(i)) != 1) return true;
+                }
+            } else {
+                if (posicion < 0) n_anterior.cambiaHijoIz(n_auxiliar);
+                else n_anterior.cambiaHijoDe(n_auxiliar);
+            }
+        }
         return false;
     }
 
