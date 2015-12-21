@@ -11,8 +11,8 @@ public class DiccTM implements Diccionario {
 
     public DiccTM(){
         nlenguas = -1;
-        lenguas = new ArrayList<Character>();
-        dicc = new TreeMap<String, Vector<String>>(String.CASE_INSENSITIVE_ORDER);
+        lenguas = new ArrayList<>();
+        dicc = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     }
 
     public void leeDiccionario(String f) {
@@ -115,7 +115,7 @@ public class DiccTM implements Diccionario {
 
     public void visualiza() {
         Set keys = dicc.keySet();
-        for (Iterator i = dicc.entrySet().iterator(); i.hasNext();){
+        for (Iterator i = keys.iterator(); i.hasNext();){
             String key = (String)i.next();
             Vector<String> values =  dicc.get(key);
             String cadena = key;
@@ -129,7 +129,7 @@ public class DiccTM implements Diccionario {
     public void visualiza(int j) {
         Set<String> keys = dicc.keySet();
         int k = 0;
-        for (Iterator i = dicc.entrySet().iterator(); i.hasNext() && k<j ;k++){
+        for (Iterator i = keys.iterator(); i.hasNext() && k<j ;k++){
             String key = (String)i.next();
             Vector<String> values =  dicc.get(key);
             String cadena = key;
@@ -143,9 +143,8 @@ public class DiccTM implements Diccionario {
     public void visualiza(int j, char l) {
         Set<String> keys = dicc.keySet();
         int k = 0;
-        for (Iterator i = dicc.entrySet().iterator(); i.hasNext() && k<j ;k++){
+        for (Iterator i = keys.iterator(); i.hasNext() && k<j ;k++){
             String key = (String)i.next();
-            Vector<String> values =  dicc.get(key);
             String cadena = key+":"+traduce(key, l);
             System.out.println(cadena);
         }

@@ -12,7 +12,7 @@ public class DiccABB implements Diccionario {
 
     public DiccABB(){
         nlenguas = -1;
-        lenguas = new ArrayList<Character> ();
+        lenguas = new ArrayList<>();
         dicc = null;
     }
 
@@ -59,6 +59,7 @@ public class DiccABB implements Diccionario {
     }
 
     public boolean inserta(Palabra2 p) {
+
         return false;
     }
 
