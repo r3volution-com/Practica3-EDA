@@ -73,13 +73,13 @@ public class DiccTM implements Diccionario {
             } else {
                 boolean changed = false;
                 for (int i = 0; i < lenguas.size(); i++){
-                    if (aux2.get(i) != null){
+                    if (aux2.get(i) != null && aux2.get(i).equalsIgnoreCase("")){
                         aux.set(i, aux2.get(i));
                         changed = true;
                     }
                 }
                 if (changed) {
-                    dicc.replace(p.getOrigen(), aux);
+                    dicc.put(p.getOrigen(), aux);
                     return true;
                 }
             }
@@ -145,7 +145,8 @@ public class DiccTM implements Diccionario {
         int k = 0;
         for (Iterator i = keys.iterator(); i.hasNext() && k<j ;k++){
             String key = (String)i.next();
-            String cadena = key+":"+traduce(key, l);
+            String cadena = key+":";
+            if(traduce(key, l) != null) cadena += traduce(key, l);
             System.out.println(cadena);
         }
     }

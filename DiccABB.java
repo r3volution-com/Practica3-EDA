@@ -9,6 +9,7 @@ public class DiccABB implements Diccionario {
     private int nlenguas;
     private ArrayList<Character> lenguas;
     private NodoABB dicc;
+    private int count;
 
     public DiccABB(){
         nlenguas = -1;
@@ -67,15 +68,13 @@ public class DiccABB implements Diccionario {
             NodoABB n_auxiliar = new NodoABB(p);
             int posicion = 0;
             for (int i = 0; i < len.length && i < lenguas.size(); i++) {
-                if (len[i] != lenguas.get(i)) {
-                    return false;
-                }
+                if (len[i] != lenguas.get(i)) return false;
             }
             if (dicc == null){
                 dicc = n_auxiliar;
                 return true;
             }
-            while (!existe){
+            while (!existe && nodo != null){
                 posicion = p.getOrigen().compareToIgnoreCase(nodo.getPalabra2().getOrigen());
                 if (posicion == 0) existe = true;
                 else if (posicion > 0) {
@@ -87,39 +86,100 @@ public class DiccABB implements Diccionario {
                 }
             }
             if (existe){
+                boolean cambio = false;
                 for (int i = 0; i< lenguas.size(); i++){
-                    if (p.getTraduccion(lenguas.get(i)) != null && !p.getTraduccion(lenguas.get(i)).equals("") && nodo.getPalabra2().setTrad(p.getTraduccion(lenguas.get(i)), lenguas.get(i)) != 1) return true;
+                    if (p.getTraduccion(lenguas.get(i)) != null && !p.getTraduccion(lenguas.get(i)).equals("")
+                            && nodo.getPalabra2().setTrad(p.getTraduccion(lenguas.get(i)), lenguas.get(i)) != -1) cambio = true;
                 }
+                return cambio;
             } else {
                 if (posicion < 0) n_anterior.cambiaHijoIz(n_auxiliar);
-                else n_anterior.cambiaHijoDe(n_auxiliar);
+                else if(posicion > 0) n_anterior.cambiaHijoDe(n_auxiliar);
+                return true;
             }
         }
         return false;
     }
 
     public boolean borra(String s) {
+
         return false;
     }
 
     public int busca(String s) {
+        int count = 0, posicion;
+        boolean existe = false;
+        NodoABB nodo=dicc;
+        if (s != null && nodo.getPalabra2() != null && nodo.getPalabra2().getOrigen() != null){
+            for (int i = 0; nodo!= null && !existe; i++){
+                posicion = s.compareToIgnoreCase(nodo.getPalabra2().getOrigen());
+                if (posicion == 0) existe = true;
+                else if (posicion > 0) nodo = nodo.getHijoDe();
+                else if (posicion < 0) nodo = nodo.getHijoIz();
+                count = i+1;
+            }
+            if (existe) return count;
+            else return count * -1;
+        }
         return 0;
     }
 
     public String traduce(String s, char l) {
+        int posicion;
+        NodoABB nodo=dicc;
+        if (s != null && nodo.getPalabra2() != null && nodo.getPalabra2().getOrigen() != null){
+            while (nodo!= null){
+                posicion = s.compareToIgnoreCase(nodo.getPalabra2().getOrigen());
+                if (posicion == 0) return nodo.getPalabra2().getTraduccion(l);
+                else if (posicion > 0) nodo = nodo.getHijoDe();
+                else if (posicion < 0) nodo = nodo.getHijoIz();
+            }
+        }
         return null;
     }
 
+    public void visualizaRec(NodoABB nodo){
+        if(nodo != null){
+            visualizaRec(nodo.getHijoIz());
+            nodo.getPalabra2().escribeInfo();
+            visualizaRec(nodo.getHijoDe());
+        }
+    }
     public void visualiza() {
+        visualizaRec(dicc);
+    }
 
+    private void visualizaAux(NodoABB nodo, int j){
+        if(nodo != null){
+            visualizaAux(nodo.getHijoIz(), j);
+            if(count < j){
+                nodo.getPalabra2().escribeInfo();
+                count++;
+            }
+            visualizaAux(nodo.getHijoDe(), j);
+        }
     }
 
     public void visualiza(int j) {
+        count = 0;
+        visualizaAux(dicc, j);
 
     }
 
+    private void visualiza2Aux(NodoABB nodo, int j, char l){
+        if(nodo != null){
+            visualizaAux(nodo.getHijoIz(), j);
+            if(count < j){
+                nodo.getPalabra2().escribeInfo(l);
+                count++;
+            }
+            visualizaAux(nodo.getHijoDe(), j);
+        }
+    }
+    
     public void visualiza(int j, char l) {
-
+        count = 0;
+        visualiza2Aux(dicc, j, l);
     }
 
     public void preordenABB(){
